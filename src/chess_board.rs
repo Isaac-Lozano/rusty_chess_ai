@@ -1,3 +1,5 @@
+use color;
+
 use bitboard::{Bitboard, BitboardPiece};
 
 use minimax::board::Board;
@@ -170,6 +172,8 @@ impl ChessBoard
 
     pub fn print(&self)
     {
+        let mut is_white_space = true;
+
         for y in 0..8
         {
             //print!("{} ", 8 - y);
@@ -180,50 +184,60 @@ impl ChessBoard
                 let piece = BitboardPiece::from_file_rank(x, 8 - y - 1);
                 if self.allies.contains(piece)
                 {
-                    print!("\x1b[1;32m");
+                    print!("{}", color::gen_color_escape_code(color::FG_GREEN, is_white_space));
                 }
                 else if self.enemies.contains(piece)
                 {
-                    print!("\x1b[1;31m");
+                    print!("{}", color::gen_color_escape_code(color::FG_RED, is_white_space));
+                }
+                else if is_white_space
+                {
+                    print!("{}", color::gen_color_escape_code(color::FG_WHITE, is_white_space));
+                }
+                else if !is_white_space
+                {
+                    print!("{}", color::gen_color_escape_code(color::FG_BLACK, is_white_space));
                 }
 
                 if self.kings.contains(piece)
                 {
-                    print!("K ");
+                    print!(" K ");
                 }
                 else if self.knights.contains(piece)
                 {
-                    print!("N ");
+                    print!(" N ");
                 }
                 else if self.rooks.contains(piece)
                 {
-                    print!("R ");
+                    print!(" R ");
                 }
                 else if self.bishops.contains(piece)
                 {
-                    print!("B ");
+                    print!(" B ");
                 }
                 else if self.queens.contains(piece)
                 {
-                    print!("Q ");
+                    print!(" Q ");
                 }
                 else if self.pawns.contains(piece)
                 {
-                    print!("P ");
+                    print!(" P ");
                 }
                 else
                 {
-                    print!("- ");
+                    print!("   ");
                 }
 
                 print!("\x1b[0m");
+                is_white_space = !is_white_space;
             }
 
             println!();
+            is_white_space = !is_white_space;
         }
 
         //println!("  A B C D E F G H");
-        println!("  0 1 2 3 4 5 6 7");
+        println!("   0  1  2  3  4  5  6  7");
     }
 
     fn try_move(board: Bitboard, piece: BitboardPiece, x: i32, y: i32) -> Option<ChessMove>
