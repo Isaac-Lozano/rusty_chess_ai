@@ -1,0 +1,8 @@
+[package]
+name = "rusty_chess_ai"
+version = "0.1.0"
+authors = ["Isaac Lozano <109lozanoi@gmail.com>"]
+
+[dependencies]
+minimax = {git = "https://github.com/Isaac-Lozano/minimax"}
+bitboard = {git = "https://github.com/Isaac-Lozano/bitboard"}

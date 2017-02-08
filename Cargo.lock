@@ -1,0 +1,21 @@
+[root]
+name = "rusty_ai"
+version = "0.1.0"
+dependencies = [
+ "bitboard 0.1.0 (git+https://github.com/Isaac-Lozano/bitboard)",
+ "minimax 0.1.0 (git+https://github.com/Isaac-Lozano/minimax)",
+]
+
+[[package]]
+name = "bitboard"
+version = "0.1.0"
+source = "git+https://github.com/Isaac-Lozano/bitboard#20e17053e961611883d62d3f424b38d9ceeb142b"
+
+[[package]]
+name = "minimax"
+version = "0.1.0"
+source = "git+https://github.com/Isaac-Lozano/minimax#eb59e29c2706870698cc457e90983580f14a0455"
+
+[metadata]
+"checksum bitboard 0.1.0 (git+https://github.com/Isaac-Lozano/bitboard)" = "<none>"
+"checksum minimax 0.1.0 (git+https://github.com/Isaac-Lozano/minimax)" = "<none>"
