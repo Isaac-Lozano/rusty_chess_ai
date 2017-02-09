@@ -1,5 +1,5 @@
 [root]
-name = "rusty_ai"
+name = "rusty_chess_ai"
 version = "0.1.0"
 dependencies = [
  "bitboard 0.1.0 (git+https://github.com/Isaac-Lozano/bitboard)",
@@ -14,7 +14,7 @@ source = "git+https://github.com/Isaac-Lozano/bitboard#20e17053e961611883d62d3f4
 [[package]]
 name = "minimax"
 version = "0.1.0"
-source = "git+https://github.com/Isaac-Lozano/minimax#eb59e29c2706870698cc457e90983580f14a0455"
+source = "git+https://github.com/Isaac-Lozano/minimax#e392c29b83caa5ce97af01c9b1e5561c6f0fed6c"
 
 [metadata]
 "checksum bitboard 0.1.0 (git+https://github.com/Isaac-Lozano/bitboard)" = "<none>"

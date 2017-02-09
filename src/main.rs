@@ -83,7 +83,7 @@ fn main() {
             Team::Enemy =>
             {
                 println!("Computing best move...");
-                let move_stats = minimax.minimax(&board, turn, 5);
+                let move_stats = minimax.minimax(&board, turn, 6);
 
                 let best_move = move_stats.mv.unwrap();
                 println!("Best move:\n{:#?}", move_stats);
