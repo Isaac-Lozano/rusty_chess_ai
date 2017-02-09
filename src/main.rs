@@ -1,6 +1,7 @@
 extern crate minimax;
 extern crate bitboard;
 
+mod color;
 mod chess_board;
 
 use chess_board::{ChessBoard, ChessMove};
