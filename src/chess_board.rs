@@ -1,4 +1,4 @@
-use color::*;
+use color::{Color, get_color_escape_code, get_color_reset_code};
 
 use bitboard::{Bitboard, BitboardPiece};
 
