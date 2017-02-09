@@ -1,4 +1,4 @@
-use color;
+use color::*;
 
 use bitboard::{Bitboard, BitboardPiece};
 
@@ -184,19 +184,15 @@ impl ChessBoard
                 let piece = BitboardPiece::from_file_rank(x, 8 - y - 1);
                 if self.allies.contains(piece)
                 {
-                    print!("{}", color::gen_color_escape_code(color::FG_GREEN, is_white_space));
+                    print!("{}", gen_color_escape_code(get_foreground_color_code(Color::Green), is_white_space));
                 }
                 else if self.enemies.contains(piece)
                 {
-                    print!("{}", color::gen_color_escape_code(color::FG_RED, is_white_space));
+                    print!("{}", gen_color_escape_code(get_foreground_color_code(Color::Red), is_white_space));
                 }
-                else if is_white_space
+                else
                 {
-                    print!("{}", color::gen_color_escape_code(color::FG_WHITE, is_white_space));
-                }
-                else if !is_white_space
-                {
-                    print!("{}", color::gen_color_escape_code(color::FG_BLACK, is_white_space));
+                    print!("{}", gen_color_escape_code(0, is_white_space));
                 }
 
                 if self.kings.contains(piece)
