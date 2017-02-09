@@ -226,7 +226,7 @@ impl ChessBoard
                     print!("   ");
                 }
 
-                print!("\x1b[0m");
+                print!("{}", get_color_reset_code());
                 is_white_space = !is_white_space;
             }
 

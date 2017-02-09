@@ -20,6 +20,11 @@ pub fn get_color_escape_code(foreground_color: Color, background_color: Color) -
     format!("\x1b[1;{};{}m", foreground_color_code, background_color_code)
 }
 
+pub fn get_color_reset_code() -> String
+{
+    String::from("\x1b[0m")
+}
+
 fn get_foreground_color_code(color: Color) -> u32
 {
     const FOREGROUND_COLOR_BASE: u32 = 30;
@@ -37,6 +42,12 @@ fn test_get_color_escape_code()
 {
     assert_eq!("\x1b[1;31;40m", get_color_escape_code(Color::Red, Color::Black));
     assert_eq!("\x1b[1;32;44m", get_color_escape_code(Color::Green, Color::Blue));
+}
+
+#[test]
+fn test_get_color_reset_code()
+{
+    assert_eq!("\x1b[0m", get_color_reset_code());
 }
 
 #[test]
