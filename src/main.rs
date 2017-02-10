@@ -15,7 +15,7 @@ use std::str::FromStr;
 fn main() {
     println!("Sorry, I'm a bit rusty at this game. Forgive me.");
 
-    let mut minimax = Minimax::new();
+    let mut minimax = Minimax::new(100000);
     let mut board = ChessBoard::new();
     let mut turn = Team::Ally;
 

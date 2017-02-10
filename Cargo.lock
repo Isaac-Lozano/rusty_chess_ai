@@ -12,10 +12,28 @@ version = "0.1.0"
 source = "git+https://github.com/Isaac-Lozano/bitboard#20e17053e961611883d62d3f424b38d9ceeb142b"
 
 [[package]]
+name = "linked-hash-map"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "lru-cache"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "linked-hash-map 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "minimax"
 version = "0.1.0"
-source = "git+https://github.com/Isaac-Lozano/minimax#e392c29b83caa5ce97af01c9b1e5561c6f0fed6c"
+source = "git+https://github.com/Isaac-Lozano/minimax#4f54423c44af8d94c6e6e2f475eb22de9ad51a2c"
+dependencies = [
+ "lru-cache 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [metadata]
 "checksum bitboard 0.1.0 (git+https://github.com/Isaac-Lozano/bitboard)" = "<none>"
+"checksum linked-hash-map 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "bda158e0dabeb97ee8a401f4d17e479d6b891a14de0bba79d5cc2d4d325b5e48"
+"checksum lru-cache 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "656fa4dfcb02bcf1063c592ba3ff6a5303ee1f2afe98c8a889e8b1a77c6dfdb7"
 "checksum minimax 0.1.0 (git+https://github.com/Isaac-Lozano/minimax)" = "<none>"
