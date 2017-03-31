@@ -5,8 +5,6 @@ use bitboard::{Bitboard, BitboardPiece};
 use minimax::board::Board;
 use minimax::Score;
 
-use std::str::FromStr;
-
 macro_rules! try_move {
     // Putting $moves:expr in here makes it more
     // evident what's going on, however it's kinda redundant.
@@ -35,31 +33,6 @@ impl ChessMove {
     fn flip_vertical(&mut self) {
         self.from = self.from.flip_vertical();
         self.to = self.to.flip_vertical();
-    }
-}
-
-impl FromStr for ChessMove {
-    type Err = ();
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut chars = s.chars();
-        let from_file = try!(chars.next().and_then(|c| c.to_digit(10)).ok_or(()));
-        let from_rank = try!(chars.next().and_then(|c| c.to_digit(10)).ok_or(()));
-        let to_file = try!(chars.next().and_then(|c| c.to_digit(10)).ok_or(()));
-        let to_rank = try!(chars.next().and_then(|c| c.to_digit(10)).ok_or(()));
-
-        match chars.next() {
-            Some(_) => return Err(()),
-            None => {}
-        }
-
-        if from_file < 8 && from_rank < 8 && to_file < 8 && to_rank < 8 {
-            Ok(ChessMove {
-                from: BitboardPiece::from_file_rank(from_file as usize, from_rank as usize),
-                to: BitboardPiece::from_file_rank(to_file as usize, to_rank as usize),
-            })
-        } else {
-            Err(())
-        }
     }
 }
 
@@ -165,8 +138,7 @@ impl ChessBoard {
         let mut is_white_space = true;
 
         for y in 0..8 {
-            //print!("{} ", 8 - y);
-            print!("{} ", 7 - y);
+            print!("{} ", 8 - y);
 
             for x in 0..8 {
                 let piece = BitboardPiece::from_file_rank(x, 8 - y - 1);
@@ -208,32 +180,41 @@ impl ChessBoard {
             is_white_space = !is_white_space;
         }
 
-        //println!("  A B C D E F G H");
-        println!("   0  1  2  3  4  5  6  7");
+        println!("   A  B  C  D  E  F  G  H");
     }
 
-    //    pub fn move_from_str(&self, s: &str) -> Result<ChessMove, ()>
-    //    {
-    //        let chars = s.chars();
-    //        if
-    //    }
+    pub fn move_from_str(&self, s: &str) -> Result<ChessMove, ()> {
+        fn alpha_to_file(c: char) -> Option<u32> {
+            let upper = match c.to_uppercase().next() {
+                Some(ch) => ch,
+                None => return None,
+            };
 
-    fn try_move(board: Bitboard, piece: BitboardPiece, x: i32, y: i32) -> Option<ChessMove> {
-        /* TODO: Optimize. Probably through shift masks */
-        let file = piece.file();
-        let rank = piece.rank();
-        if (file as i32) + x < 0 || (file as i32) + x >= 8 || (rank as i32) + y < 0 ||
-           (rank as i32) + y >= 8 {
-            None
-        } else {
-            if board.contains(piece.shift(x, y)) {
-                Some(ChessMove {
-                    from: piece,
-                    to: piece.shift(x, y),
-                })
-            } else {
+            if upper < 'A' || upper > 'F' {
                 None
+            } else {
+                Some(upper as u32 - 'A' as u32)
             }
+        }
+
+        let mut chars = s.chars();
+        let from_file = chars.next().and_then(|c| alpha_to_file(c)).ok_or(())?;
+        let from_rank = chars.next().and_then(|c| c.to_digit(10)).ok_or(())? - 1;
+        let to_file = chars.next().and_then(|c| alpha_to_file(c)).ok_or(())?;
+        let to_rank = chars.next().and_then(|c| c.to_digit(10)).ok_or(())? - 1;
+
+        match chars.next() {
+            Some(_) => return Err(()),
+            None => {}
+        }
+
+        if from_file < 8 && from_rank < 8 && to_file < 8 && to_rank < 8 {
+            Ok(ChessMove {
+                from: BitboardPiece::from_file_rank(from_file as usize, from_rank as usize),
+                to: BitboardPiece::from_file_rank(to_file as usize, to_rank as usize),
+            })
+        } else {
+            Err(())
         }
     }
 

@@ -4,13 +4,12 @@ extern crate bitboard;
 mod color;
 mod chess_board;
 
-use chess_board::{ChessBoard, ChessMove};
+use chess_board::ChessBoard;
 
 use minimax::board::Board;
 use minimax::{Minimax, Score, Team};
 
 use std::io::{self, Write};
-use std::str::FromStr;
 
 fn main() {
     println!("Sorry, I'm a bit rusty at this game. Forgive me.");
@@ -51,7 +50,7 @@ fn main() {
                     io::stdin().read_line(&mut move_str).unwrap();
                     let move_str_len = move_str.len();
                     move_str.truncate(move_str_len - 1);
-                    match ChessMove::from_str(&move_str) {
+                    match board.move_from_str(&move_str) {
                         Ok(mv) => {
                             if moves.contains(&mv) {
                                 board.do_move(&mv);
