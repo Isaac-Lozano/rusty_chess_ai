@@ -7,6 +7,24 @@ use minimax::Score;
 
 use std::str::FromStr;
 
+macro_rules! try_move {
+    // Putting $moves:expr in here makes it more
+    // evident what's going on, however it's kinda redundant.
+    ($moves:expr, $board:expr, $piece:expr, $x:expr, $y:expr) => {
+        let file = $piece.file();
+        let rank = $piece.rank();
+        if (file as i32) + $x >= 0 && (file as i32) + $x < 6 &&
+           (rank as i32) + $y >= 0 && (rank as i32) + $y < 8 &&
+           $board.contains($piece.shift($x, $y))
+        {
+            $moves.push(ChessMove {
+                from: $piece,
+                to: $piece.shift($x, $y),
+            });
+        }
+    }
+}
+
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 pub struct ChessMove {
     from: BitboardPiece,
@@ -222,18 +240,13 @@ impl ChessBoard {
     fn gen_pawn_moves(&self) -> Vec<ChessMove> {
         let mut moves = Vec::new();
         for pawn in self.pawns.intersect(self.allies).pieces() {
-            if let Some(mv) = Self::try_move(self.enemies, pawn, -1, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.union(self.enemies).complement(),
-                                             pawn,
-                                             0,
-                                             1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.enemies, pawn, 1, 1) {
-                moves.push(mv);
-            }
+            try_move!(moves, self.enemies, pawn, -1, 1);
+            try_move!(moves,
+                      self.enemies.union(self.allies).complement(),
+                      pawn,
+                      0,
+                      1);
+            try_move!(moves, self.enemies, pawn, 1, 1);
         }
         moves
     }
@@ -297,30 +310,14 @@ impl ChessBoard {
     fn gen_knight_moves(&self) -> Vec<ChessMove> {
         let mut moves = Vec::new();
         for knight in self.knights.intersect(self.allies).pieces() {
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, 2, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, 1, 2) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, -1, 2) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, -2, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, -2, -1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, -1, -2) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, 1, -2) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), knight, 2, -1) {
-                moves.push(mv);
-            }
+            try_move!(moves, self.allies.complement(), knight, 2, 1);
+            try_move!(moves, self.allies.complement(), knight, 1, 2);
+            try_move!(moves, self.allies.complement(), knight, -1, 2);
+            try_move!(moves, self.allies.complement(), knight, -2, 1);
+            try_move!(moves, self.allies.complement(), knight, -2, -1);
+            try_move!(moves, self.allies.complement(), knight, -1, -2);
+            try_move!(moves, self.allies.complement(), knight, 1, -2);
+            try_move!(moves, self.allies.complement(), knight, 2, -1);
         }
         moves
     }
@@ -328,30 +325,14 @@ impl ChessBoard {
     fn gen_king_moves(&self) -> Vec<ChessMove> {
         let mut moves = Vec::new();
         for king in self.kings.intersect(self.allies).pieces() {
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, 0, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, 0, -1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, 1, 0) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, -1, 0) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, 1, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, -1, 1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, -1, -1) {
-                moves.push(mv);
-            }
-            if let Some(mv) = Self::try_move(self.allies.complement(), king, 1, -1) {
-                moves.push(mv);
-            }
+            try_move!(moves, self.allies.complement(), king, 0, 1);
+            try_move!(moves, self.allies.complement(), king, 0, -1);
+            try_move!(moves, self.allies.complement(), king, -1, 0);
+            try_move!(moves, self.allies.complement(), king, 1, 0);
+            try_move!(moves, self.allies.complement(), king, 1, 1);
+            try_move!(moves, self.allies.complement(), king, -1, -1);
+            try_move!(moves, self.allies.complement(), king, -1, 1);
+            try_move!(moves, self.allies.complement(), king, 1, -1);
         }
         moves
     }
