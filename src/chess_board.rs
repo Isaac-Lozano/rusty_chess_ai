@@ -190,7 +190,7 @@ impl ChessBoard {
                 None => return None,
             };
 
-            if upper < 'A' || upper > 'F' {
+            if upper < 'A' || upper > 'H' {
                 None
             } else {
                 Some(upper as u32 - 'A' as u32)
