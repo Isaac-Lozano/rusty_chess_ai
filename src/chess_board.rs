@@ -16,13 +16,10 @@ pub struct ChessMove
 
 impl ChessMove
 {
-    fn flip_vertical(self) -> ChessMove
+    fn flip_vertical(&mut self)
     {
-        ChessMove
-        {
-            from: self.from.flip_vertical(),
-            to: self.to.flip_vertical(),
-        }
+        self.from = self.from.flip_vertical();
+        self.to = self.to.flip_vertical();
     }
 }
 
@@ -237,6 +234,12 @@ impl ChessBoard
         //println!("  A B C D E F G H");
         println!("   0  1  2  3  4  5  6  7");
     }
+
+//    pub fn move_from_str(&self, s: &str) -> Result<ChessMove, ()>
+//    {
+//        let chars = s.chars();
+//        if
+//    }
 
     fn try_move(board: Bitboard, piece: BitboardPiece, x: i32, y: i32) -> Option<ChessMove>
     {
@@ -458,30 +461,17 @@ impl Board for ChessBoard
     {
         let mut moves = Vec::new();
         let flipped = self.as_other();
-        moves.append(&mut flipped.gen_pawn_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
-        moves.append(&mut flipped.gen_king_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
-        moves.append(&mut flipped.gen_knight_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
-        moves.append(&mut flipped.gen_bishop_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
-        moves.append(&mut flipped.gen_queen_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
-        moves.append(&mut flipped.gen_rook_moves()
-             .into_iter()
-             .map(|m| m.flip_vertical())
-             .collect());
+        moves.append(&mut flipped.gen_pawn_moves());
+        moves.append(&mut flipped.gen_king_moves());
+        moves.append(&mut flipped.gen_knight_moves());
+        moves.append(&mut flipped.gen_bishop_moves());
+        moves.append(&mut flipped.gen_queen_moves());
+        moves.append(&mut flipped.gen_rook_moves());
+
+        for mv in moves.iter_mut() {
+            mv.flip_vertical();
+        }
+
         moves
     }
 
