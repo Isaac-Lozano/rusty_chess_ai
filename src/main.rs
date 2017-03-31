@@ -19,15 +19,12 @@ fn main() {
     let mut board = ChessBoard::new();
     let mut turn = Team::Ally;
 
-    loop
-    {
+    loop {
         println!("\nCurrent board state:");
         board.print();
 
-        if board.is_game_over()
-        {
-            let team = match board.score()
-            {
+        if board.is_game_over() {
+            let team = match board.score() {
                 Score::Win => Team::Ally,
                 Score::Lose => Team::Enemy,
                 _ => unreachable!(),
@@ -36,59 +33,47 @@ fn main() {
             break;
         }
 
-        let moves = match turn
-        {
+        let moves = match turn {
             Team::Ally => board.gen_ally_moves(),
             Team::Enemy => board.gen_enemy_moves(),
         };
-        if moves.len() == 0
-        {
+        if moves.len() == 0 {
             println!("No more moves, {:?} wins!", turn);
             break;
         }
 
-        match turn
-        {
-            Team::Ally =>
-            {
-                loop
-                {
+        match turn {
+            Team::Ally => {
+                loop {
                     let mut move_str = String::new();
                     print!("Enter your move: ");
                     io::stdout().flush().unwrap();
                     io::stdin().read_line(&mut move_str).unwrap();
                     let move_str_len = move_str.len();
                     move_str.truncate(move_str_len - 1);
-                    match ChessMove::from_str(&move_str)
-                    {
-                        Ok(mv) =>
-                        {
-                            if moves.contains(&mv)
-                            {
+                    match ChessMove::from_str(&move_str) {
+                        Ok(mv) => {
+                            if moves.contains(&mv) {
                                 board.do_move(&mv);
                                 break;
-                            }
-                            else
-                            {
+                            } else {
                                 println!("Not a valid move");
                             }
-                        },
-                        Err(_) =>
-                        {
+                        }
+                        Err(_) => {
                             println!("Bad move format");
-                        },
+                        }
                     }
                 }
-            },
-            Team::Enemy =>
-            {
+            }
+            Team::Enemy => {
                 println!("Computing best move...");
                 let move_stats = minimax.minimax(&board, turn, 6);
 
                 let best_move = move_stats.mv.unwrap();
                 println!("Best move:\n{:#?}", move_stats);
                 board.do_move(&best_move);
-            },
+            }
         }
 
         turn = turn.other_team();
