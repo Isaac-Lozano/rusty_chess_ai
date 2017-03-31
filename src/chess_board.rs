@@ -362,24 +362,25 @@ impl Board for ChessBoard {
 
     fn gen_ally_moves(&self) -> Vec<Self::Move> {
         let mut moves = Vec::new();
-        moves.append(&mut self.gen_pawn_moves());
-        moves.append(&mut self.gen_king_moves());
-        moves.append(&mut self.gen_knight_moves());
-        moves.append(&mut self.gen_bishop_moves());
-        moves.append(&mut self.gen_queen_moves());
-        moves.append(&mut self.gen_rook_moves());
+        moves.extend(self.gen_pawn_moves());
+        moves.extend(self.gen_king_moves());
+        moves.extend(self.gen_knight_moves());
+        moves.extend(self.gen_bishop_moves());
+        moves.extend(self.gen_queen_moves());
+        moves.extend(self.gen_rook_moves());
         moves
     }
 
     fn gen_enemy_moves(&self) -> Vec<Self::Move> {
         let mut moves = Vec::new();
         let flipped = self.as_other();
-        moves.append(&mut flipped.gen_pawn_moves());
-        moves.append(&mut flipped.gen_king_moves());
-        moves.append(&mut flipped.gen_knight_moves());
-        moves.append(&mut flipped.gen_bishop_moves());
-        moves.append(&mut flipped.gen_queen_moves());
-        moves.append(&mut flipped.gen_rook_moves());
+
+        moves.extend(flipped.gen_pawn_moves());
+        moves.extend(flipped.gen_king_moves());
+        moves.extend(flipped.gen_knight_moves());
+        moves.extend(flipped.gen_bishop_moves());
+        moves.extend(flipped.gen_queen_moves());
+        moves.extend(flipped.gen_rook_moves());
 
         for mv in moves.iter_mut() {
             mv.flip_vertical();
