@@ -10,11 +10,12 @@ use minimax::board::Board;
 use minimax::{Minimax, Score, Team};
 
 use std::io::{self, Write};
+use std::num::NonZeroUsize;
 
 fn main() {
     println!("Sorry, I'm a bit rusty at this game. Forgive me.");
 
-    let mut minimax = Minimax::new(100000);
+    let mut minimax = Minimax::new(NonZeroUsize::new(1000000).unwrap());
     let mut board = ChessBoard::new();
     let mut turn = Team::Ally;
 
@@ -49,6 +50,9 @@ fn main() {
                     io::stdout().flush().unwrap();
                     io::stdin().read_line(&mut move_str).unwrap();
                     let move_str_len = move_str.len();
+                    if move_str_len == 0 {
+                        loop {}
+                    }
                     move_str.truncate(move_str_len - 1);
                     match board.move_from_str(&move_str) {
                         Ok(mv) => {
@@ -70,7 +74,16 @@ fn main() {
                 let move_stats = minimax.minimax(&board, turn, 6);
 
                 let best_move = move_stats.mv.unwrap();
-                println!("Best move:\n{:#?}", move_stats);
+                println!();
+                println!("Score: {:?}", move_stats.score.score);
+                println!("Turns: {}", move_stats.score.turns);
+                println!("Nodes: {}", move_stats.nodes_visited);
+                println!("My move is: {}", best_move);
+                print!("I expect: ");
+                for mv in move_stats.mvs.iter().rev().skip(1) {
+                    print!("{} ", mv);
+                }
+                println!();
                 board.do_move(&best_move);
             }
         }

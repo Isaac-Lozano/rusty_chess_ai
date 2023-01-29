@@ -5,13 +5,15 @@ use bitboard::{Bitboard, BitboardPiece};
 use minimax::board::Board;
 use minimax::Score;
 
+use std::fmt;
+
 macro_rules! try_move {
     // Putting $moves:expr in here makes it more
     // evident what's going on, however it's kinda redundant.
     ($moves:expr, $board:expr, $piece:expr, $x:expr, $y:expr) => {
         let file = $piece.file();
         let rank = $piece.rank();
-        if (file as i32) + $x >= 0 && (file as i32) + $x < 6 &&
+        if (file as i32) + $x >= 0 && (file as i32) + $x < 8 &&
            (rank as i32) + $y >= 0 && (rank as i32) + $y < 8 &&
            $board.contains($piece.shift($x, $y))
         {
@@ -33,6 +35,18 @@ impl ChessMove {
     fn flip_vertical(&mut self) {
         self.from = self.from.flip_vertical();
         self.to = self.to.flip_vertical();
+    }
+}
+
+impl fmt::Display for ChessMove {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result
+    {
+        let row_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        let col_arr = ['1', '2', '3', '4', '5', '6', '7', '8'];
+        write!(fmt, "{}", row_arr[self.from.file()])?;
+        write!(fmt, "{}", col_arr[self.from.rank()])?;
+        write!(fmt, "{}", row_arr[self.to.file()])?;
+        write!(fmt, "{}", col_arr[self.to.rank()])
     }
 }
 
@@ -228,6 +242,13 @@ impl ChessBoard {
                       0,
                       1);
             try_move!(moves, self.enemies, pawn, 1, 1);
+            if Bitboard::from_u64(0x000000000000FF00).contains(pawn) {
+                try_move!(moves,
+                    self.enemies.union(self.allies).complement(),
+                    pawn,
+                    0,
+                    2);
+            }
         }
         moves
     }
@@ -392,11 +413,6 @@ impl Board for ChessBoard {
     }
 
     fn is_game_over(&self) -> bool {
-        if self.kings.intersect(self.allies).is_empty() ||
-           self.kings.intersect(self.enemies).is_empty() {
-            true
-        } else {
-            false
-        }
+        self.kings.intersect(self.allies).is_empty() || self.kings.intersect(self.enemies).is_empty()
     }
 }
